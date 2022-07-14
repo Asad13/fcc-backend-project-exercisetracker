@@ -29,7 +29,7 @@ app.post('/api/users', async (req,res) => {
     const user = new User({username: req.body.username});
     try {
       const result = await user.save();
-      res.json(result);
+      res.json({username: result.username,_id: result._id});
     } catch (error) {
       res.send('Error');
     }
