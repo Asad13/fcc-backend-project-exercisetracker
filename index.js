@@ -55,11 +55,37 @@ app.post('/api/users/:_id/exercises', async (req,res) => {
   })
   try {
     const result = await exercise.save();
-    const username = await User.findById(result.userId);
-    res.json({username: username,description: result.description,duration: result.duration,date: result.date.toDateString(),_id: result.userId});
+    const user = await User.findById(result.userId);
+    res.json({username: user.username,description: result.description,duration: result.duration,date: result.date.toDateString(),_id: result.userId});
   } catch (error) {
     res.send('Error');
   }
+});
+
+app.get('/api/users/:_id/logs',async (req,res) => {
+  let user = await User.findById(req.params.id);
+  let search = {userId: req.params._id};
+  if(req.query.from) search.date.$gte = new Date(req.query.from);
+  if(req.query.to) search.date.$lte = new Date(req.query.to);
+  let exercises;
+  if(req.query.limit){
+    exercises = await User.find(search).limit(parseInt(req.query.limit));
+  }else{
+    exercises = await User.find(search);
+  }
+
+  const result = {
+    username: user.username,
+    count: exercises.length,
+    _id: req.params._id,
+    log: exercises.map(exercise => ({
+      description: exercise.description,
+      duration: exercise.duration,
+      date: exercise.date.toDateString()
+    }))
+  }
+
+  res.json(result);
 });
 
 const listener = app.listen(process.env.PORT || 3000, () => {
