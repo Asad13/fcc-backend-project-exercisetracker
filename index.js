@@ -16,6 +16,15 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User',userSchema);
 
+const exerciseSchema = new mongoose.Schema({
+  userId: mongoose.Schema.Types.ObjectId,
+  description: {type: String, required: true},
+  duration: {type: Number, required: true},
+  date: {type: Date, default: Date.now}
+});
+
+const Exercise = mongoose.model('Exercise',exerciseSchema);
+
 app.use(cors())
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({extended: false}));
@@ -37,6 +46,21 @@ app.post('/api/users', async (req,res) => {
 });
 
 
+app.post('/api/users/:_id/exercises', async (req,res) => {
+  const exercise = new Exercise({
+    userId: req.params._id,
+    description: req.body.description,
+    duration: req.body.duration,
+    date: new Date(req.body.date)
+  })
+  try {
+    const result = await exercise.save();
+    const username = await User.findById(result.userId);
+    res.json({username: username,description: result.description,duration: result.duration,date: result.date.toDateString(),_id: result.userId});
+  } catch (error) {
+    res.send('Error');
+  }
+});
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
