@@ -95,7 +95,7 @@ app.get('/api/users/:_id/logs',async (req,res) => {
       }))
     };*/
 
-    res.json({
+    res.send({
       username: user.username,
       count: count,//exercises.length,
       _id: req.params._id,
@@ -119,7 +119,7 @@ app.get('/api/users/:_id/logs',async (req,res) => {
       }))
     };*/
 
-    res.json({
+    res.send({
       username: user.username,
       count:  count,//exercises.length,
       _id: req.params._id,
