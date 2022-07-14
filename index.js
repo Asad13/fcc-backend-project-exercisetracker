@@ -33,6 +33,15 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
 
+app.get('/api/users', async (req,res) => {
+  try {
+    const users = await User.find().select({username: 1,_id: 1});
+    res.json(users);
+  } catch (error) {
+    res.send('error');
+  }
+});
+
 app.post('/api/users', async (req,res) => {
   if(req.body.username){
     const user = new User({username: req.body.username});
@@ -72,24 +81,36 @@ app.get('/api/users/:_id/logs',async (req,res) => {
   }
 
   let exercises;
+  let result;
   if(req.query.limit){
     exercises = await Exercise.find(search).limit(parseInt(req.query.limit));
+    result = {
+      username: user.username,
+      count: exercises.length,
+      _id: req.params._id,
+      log: exercises.map(exercise => ({
+        description: exercise.description,
+        duration: exercise.duration,
+        date: exercise.date.toDateString()
+      }))
+    };
+
+    res.json(result);
   }else{
-    exercises = await Exercise.find(search);
-  }
+    exercises = await Exercise.find(search).select({description: 1,duration: 1, date: 1});
+    result = {
+      username: user.username,
+      count: exercises.length,
+      _id: req.params._id,
+      log: exercises.map(exercise => ({
+        description: exercise.description,
+        duration: exercise.duration,
+        date: exercise.date.toDateString()
+      }))
+    };
 
-  const result = {
-    username: user.username,
-    count: exercises.length,
-    _id: req.params._id,
-    log: exercises.map(exercise => ({
-      description: exercise.description,
-      duration: exercise.duration,
-      date: exercise.date.toDateString()
-    }))
+    res.json(result);
   }
-
-  res.json(result);
 });
 
 const listener = app.listen(process.env.PORT || 3000, () => {
