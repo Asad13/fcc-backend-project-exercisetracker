@@ -80,12 +80,9 @@ app.get('/api/users/:id/logs',async (req,res) => {
     if(req.query.from) search.date["$gte"] = new Date(req.query.from);
     if(req.query.to) search.date["$lte"] = new Date(req.query.to);
   }
-
-  let exercises;
-  let result;
   if(req.query.limit){
-    exercises = await Exercise.find(search).limit(parseInt(req.query.limit));
-    result = {
+    let exercises = await Exercise.find(search).limit(parseInt(req.query.limit));
+    let result = {
       username: user.username,
       count: exercises.length,
       _id: req.params.id,
@@ -98,8 +95,8 @@ app.get('/api/users/:id/logs',async (req,res) => {
 
     res.json(result);
   }else{
-    exercises = await Exercise.find(search).select({description: 1,duration: 1, date: 1});
-    result = {
+    let exercises = await Exercise.find(search).select({description: 1,duration: 1, date: 1});
+    let result = {
       username: user.username,
       count: exercises.length,
       _id: req.params.id,
@@ -124,11 +121,9 @@ app.get('/api/users/:_id/logs',async (req,res) => {
     if(req.query.to) search.date["$lte"] = new Date(req.query.to);
   }
 
-  let exercises;
-  let result;
   if(req.query.limit){
-    exercises = await Exercise.find(search).limit(parseInt(req.query.limit));
-    result = {
+    let exercises = await Exercise.find(search).limit(parseInt(req.query.limit));
+    let result = {
       username: user.username,
       count: exercises.length,
       _id: req.params._id,
@@ -141,8 +136,8 @@ app.get('/api/users/:_id/logs',async (req,res) => {
 
     res.json(result);
   }else{
-    exercises = await Exercise.find(search).select({description: 1,duration: 1, date: 1});
-    result = {
+    let exercises = await Exercise.find(search).select({description: 1,duration: 1, date: 1});
+    let result = {
       username: user.username,
       count: exercises.length,
       _id: req.params._id,
