@@ -72,63 +72,26 @@ app.post('/api/users/:_id/exercises', async (req,res) => {
 });
 
 
-app.get('/api/users/:_id/logs',async (req,res) => {
-  let user = await User.findById(req.params._id);
-  let search = {userId: req.params._id};
-  if(req.query.from || req.query.to){
-    search.date = {};
-    if(req.query.from) search.date["$gte"] = new Date(req.query.from);
-    if(req.query.to) search.date["$lte"] = new Date(req.query.to);
-  }
-
-  if(req.query.limit){
-    let count =  await Exercise.find({userId: req.params._id}).limit(parseInt(req.query.limit)).countDocuments();
-    let exercises = await Exercise.find({userId: req.params._id}).select({description: 1,duration: 1, date: 1}).limit(parseInt(req.query.limit));
-    /*let result = {
-      username: user.username,
-      count: count,//exercises.length,
-      _id: req.params._id,
-      log: exercises.map(exercise => ({
+app.get('/api/users/:_id/logs', async (req,res) => {
+  try {
+    const user = await User.findById(req.params._id);
+    const exercises = await Exercise.find({userId: req.params._id});
+    let log = JSON.parse(exercises).map(exercise => {
+      return {
         description: exercise.description,
-        duration: parseInt(exercise.duration),
+        duration: exercise.duration,
         date: exercise.date.toDateString()
-      }))
-    };*/
-
-    res.send({
-      username: user.username,
-      count: count,//exercises.length,
-      _id: req.params._id,
-      log: exercises.map(exercise => ({
-        description: exercise.description,
-        duration: parseInt(exercise.duration),
-        date: exercise.date.toDateString()
-      }))
+      }
     });
-  }else{
-    let count =  await Exercise.find({userId: req.params._id}).countDocuments();
-    let exercises = await Exercise.find({userId: req.params._id}).select({description: 1,duration: 1, date: 1});
-    /*let result = {
+    
+    res.json({
       username: user.username,
-      count: count,//exercises.length,
+      count: log.length,
       _id: req.params._id,
-      log: exercises.map(exercise => ({
-        description: exercise.description,
-        duration: parseInt(exercise.duration),
-        date: exercise.date.toDateString()
-      }))
-    };*/
-
-    res.send({
-      username: user.username,
-      count:  count,//exercises.length,
-      _id: req.params._id,
-      log: exercises.map(exercise => ({
-        description: exercise.description,
-        duration: parseInt(exercise.duration),
-        date: exercise.date.toDateString()
-      }))
+      log: log
     });
+  } catch (error) {
+    res.send('error');
   }
 });
 
