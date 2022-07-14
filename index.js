@@ -113,6 +113,48 @@ app.get('/api/users/:_id/logs',async (req,res) => {
   }
 });
 
+app.get('/api/users/:id/logs',async (req,res) => {
+  let user = await User.findById(req.params.id);
+  let search = {userId: req.params.id};
+  if(req.query.from || req.query.to){
+    search.date = {};
+    if(req.query.from) search.date["$gte"] = new Date(req.query.from);
+    if(req.query.to) search.date["$lte"] = new Date(req.query.to);
+  }
+
+  let exercises;
+  let result;
+  if(req.query.limit){
+    exercises = await Exercise.find(search).limit(parseInt(req.query.limit));
+    result = {
+      username: user.username,
+      count: exercises.length,
+      _id: req.params._id,
+      log: exercises.map(exercise => ({
+        description: exercise.description,
+        duration: exercise.duration,
+        date: exercise.date.toDateString()
+      }))
+    };
+
+    res.json(result);
+  }else{
+    exercises = await Exercise.find(search).select({description: 1,duration: 1, date: 1});
+    result = {
+      username: user.username,
+      count: exercises.length,
+      _id: req.params._id,
+      log: exercises.map(exercise => ({
+        description: exercise.description,
+        duration: exercise.duration,
+        date: exercise.date.toDateString()
+      }))
+    };
+
+    res.json(result);
+  }
+});
+
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
 })
