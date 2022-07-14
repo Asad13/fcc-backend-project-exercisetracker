@@ -71,9 +71,10 @@ app.post('/api/users/:_id/exercises', async (req,res) => {
   }
 });
 
-app.get('/api/users/:_id/logs',async (req,res) => {
-  let user = await User.findById(req.params._id);
-  let search = {userId: req.params._id};
+
+app.get('/api/users/:id/logs',async (req,res) => {
+  let user = await User.findById(req.params.id);
+  let search = {userId: req.params.id};
   if(req.query.from || req.query.to){
     search.date = {};
     if(req.query.from) search.date["$gte"] = new Date(req.query.from);
@@ -113,9 +114,10 @@ app.get('/api/users/:_id/logs',async (req,res) => {
   }
 });
 
-app.get('/api/users/:id/logs',async (req,res) => {
-  let user = await User.findById(req.params.id);
-  let search = {userId: req.params.id};
+
+app.get('/api/users/:_id/logs',async (req,res) => {
+  let user = await User.findById(req.params._id);
+  let search = {userId: req.params._id};
   if(req.query.from || req.query.to){
     search.date = {};
     if(req.query.from) search.date["$gte"] = new Date(req.query.from);
