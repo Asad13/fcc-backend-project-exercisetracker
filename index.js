@@ -62,16 +62,16 @@ app.post('/api/users/:_id/exercises', async (req,res) => {
   }
 });
 
-app.get('/api/users/:_id/logs?',async (req,res) => {
+app.get('/api/users/:_id/logs',async (req,res) => {
   let user = await User.findById(req.params._id);
   let search = {userId: req.params._id};
   // if(req.query.from) search.date.$gte = new Date(req.query.from);
   // if(req.query.to) search.date.$lte = new Date(req.query.to);
   let exercises;
   if(req.query.limit){
-    exercises = await User.find(search).limit(parseInt(req.query.limit));
+    exercises = await Exercise.find(search).limit(parseInt(req.query.limit));
   }else{
-    exercises = await User.find(search);
+    exercises = await Exercise.find(search);
   }
 
   const result = {
