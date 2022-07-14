@@ -129,12 +129,21 @@ app.get('/api/users/:_id/logs',async (req,res) => {
       _id: req.params._id,
       log: exercises.map(exercise => ({
         description: exercise.description,
-        duration: exercise.duration,
+        duration: parseInt(exercise.duration),
         date: exercise.date.toDateString()
       }))
     };
 
-    res.json(result);
+    res.json({
+      username: user.username,
+      count: exercises.length,
+      _id: req.params._id,
+      log: exercises.map(exercise => ({
+        description: exercise.description,
+        duration: parseInt(exercise.duration),
+        date: exercise.date.toDateString()
+      }))
+    });
   }else{
     let exercises = await Exercise.find(search).select({description: 1,duration: 1, date: 1});
     let result = {
@@ -143,12 +152,21 @@ app.get('/api/users/:_id/logs',async (req,res) => {
       _id: req.params._id,
       log: exercises.map(exercise => ({
         description: exercise.description,
-        duration: exercise.duration,
+        duration: parseInt(exercise.duration),
         date: exercise.date.toDateString()
       }))
     };
 
-    res.json(result);
+    res.json({
+      username: user.username,
+      count: exercises.length,
+      _id: req.params._id,
+      log: exercises.map(exercise => ({
+        description: exercise.description,
+        duration: parseInt(exercise.duration),
+        date: exercise.date.toDateString()
+      }))
+    });
   }
 });
 
