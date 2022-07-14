@@ -82,8 +82,8 @@ app.get('/api/users/:_id/logs',async (req,res) => {
   }
 
   if(req.query.limit){
-    let count =  await Exercise.find(search).limit(parseInt(req.query.limit)).countDocuments();
-    let exercises = await Exercise.find(search).select({description: 1,duration: 1, date: 1}).limit(parseInt(req.query.limit));
+    let count =  await Exercise.find({userId: req.params._id}).limit(parseInt(req.query.limit)).countDocuments();
+    let exercises = await Exercise.find({userId: req.params._id}).select({description: 1,duration: 1, date: 1}).limit(parseInt(req.query.limit));
     /*let result = {
       username: user.username,
       count: count,//exercises.length,
@@ -106,8 +106,8 @@ app.get('/api/users/:_id/logs',async (req,res) => {
       }))
     });
   }else{
-    let count =  await Exercise.find(search).countDocuments();
-    let exercises = await Exercise.find(search).select({description: 1,duration: 1, date: 1});
+    let count =  await Exercise.find({userId: req.params._id}).countDocuments();
+    let exercises = await Exercise.find({userId: req.params._id}).select({description: 1,duration: 1, date: 1});
     /*let result = {
       username: user.username,
       count: count,//exercises.length,
