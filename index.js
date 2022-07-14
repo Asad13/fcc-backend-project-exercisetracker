@@ -61,12 +61,12 @@ app.post('/api/users/:_id/exercises', async (req,res) => {
     res.send('Error');
   }
 });
-/*
+
 app.get('/api/users/:_id/logs',async (req,res) => {
   let user = await User.findById(req.params.id);
   let search = {userId: req.params._id};
-  if(req.query.from) search.date.$gte = new Date(req.query.from);
-  if(req.query.to) search.date.$lte = new Date(req.query.to);
+  // if(req.query.from) search.date.$gte = new Date(req.query.from);
+  // if(req.query.to) search.date.$lte = new Date(req.query.to);
   let exercises;
   if(req.query.limit){
     exercises = await User.find(search).limit(parseInt(req.query.limit));
@@ -86,7 +86,7 @@ app.get('/api/users/:_id/logs',async (req,res) => {
   }
 
   res.json(result);
-});*/
+});
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
