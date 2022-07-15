@@ -28,45 +28,12 @@ const Exercise = mongoose.model('Exercise',exerciseSchema);
 app.use(cors())
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
 
-app.get('/api/users/:_id/logs', async (req,res) => {
-  try {
-    const user = await User.findById(req.params._id);
-    let search = {userId: req.params._id};
-    if(req.query.from || req.query.to){
-      search.date = {};
-      if(req.query.from) search.date["$gt"] = new Date(req.query.from);
-      if(req.query.to) search.date["$lt"] = new Date(req.query.to);
-    }
-    let exercises;
-    if(req.query.limit){
-      exercises = await Exercise.find(search).limit(parseInt(req.query.limit));
-    }else{
-      exercises = await Exercise.find(search);
-    }
-
-    let log = exercises.map(exercise => {
-      return {
-        description: exercise.description,
-        duration: exercise.duration,
-        date: exercise.date.toDateString()
-      };
-    });
-
-    res.json({
-      username: user.username,
-      count: log.length,
-      _id: req.params._id,
-      log: log
-    });
-  } catch (error) {
-    res.send('error');
-  }
-});
 
 app.get('/api/users', async (req,res) => {
   try {
@@ -106,6 +73,41 @@ app.post('/api/users/:_id/exercises', async (req,res) => {
   }
 });
 
+app.get('/api/users/:_id/logs', async (req,res) => {
+  try {
+    const user = await User.findById(req.params._id);
+    let search = {userId: req.params._id};
+    if(req.query.from || req.query.to){
+      search.date = {};
+      if(req.query.from) search.date["$gt"] = new Date(req.query.from);
+      if(req.query.to) search.date["$lt"] = new Date(req.query.to);
+    }
+    let exercises;
+    console.log(search);
+    if(req.query.limit){
+      exercises = await Exercise.find(search).limit(parseInt(req.query.limit));
+    }else{
+      exercises = await Exercise.find(search);
+    }
+
+    let log = exercises.map(exercise => {
+      return {
+        description: exercise.description,
+        duration: exercise.duration,
+        date: exercise.date.toDateString()
+      };
+    });
+
+    res.json({
+      username: user.username,
+      count: log.length,
+      _id: req.params._id,
+      log: log
+    });
+  } catch (error) {
+    res.send('error');
+  }
+});
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
