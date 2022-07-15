@@ -5,7 +5,12 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 require('dotenv').config()
 
-mongoose.connect(process.env.MONGO_URI,{useNewUrlParser: true, useUnifiedTopology: true });
+app.use(cors())
+app.use(express.static('public'))
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+
+mongoose.connect(process.env.MONGO_URI,{useNewUrlParser: true});
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -24,11 +29,6 @@ const exerciseSchema = new mongoose.Schema({
 });
 
 const Exercise = mongoose.model('Exercise',exerciseSchema);
-
-app.use(cors())
-app.use(express.static('public'))
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
