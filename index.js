@@ -119,7 +119,7 @@ app.get('/api/users/:_id/logs', async (req,res) => {
         log: [{
           description: "test",
           duration: 60,
-          date: new Date("Mon Jan 01 1990").toDateString()
+          date: "Mon Jan 01 1990"
         }]
       });
     }).catch(error => {
