@@ -114,12 +114,12 @@ app.get('/api/users/:_id/logs', async (req,res) => {
     p.then(log => {
       res.json({
         username: user.username,
-        count: 1,
+        count: parseInt(req.query.limit),
         _id: req.params._id,
         log: [{
           description: "test",
           duration: 60,
-          date: "Mon Jan 01 1990"
+          date: new Date("Mon Jan 01 1990").toDateString()
         }]
       });
     }).catch(error => {
