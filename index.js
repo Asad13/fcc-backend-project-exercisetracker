@@ -90,20 +90,22 @@ app.get('/api/users/:_id/logs', async (req,res) => {
     }else{
       exercises = await Exercise.find(search);
     }
-    let log = [];
-    log = await Promise.all(exercises.map(exercise => {
+
+    let promise = Promise.resolve(exercises.map(exercise => {
       return {
         description: exercise.description,
-        duration:exercise.duration,
-        date:exercise.date.toDateString()
+        duration: exercise.duration,
+        date: exercise.date.toDateString()
       };
     }))
 
-    res.json({
-      "username": user.username,
-      "count": log.length,
-      "_id": req.params._id,
-      "log": log
+    promise.then(log => {
+      res.json({
+        username: user.username,
+        count: log.length,
+        _id: req.params._id,
+        log: log
+      });
     });
 
   } catch (error) {
