@@ -31,6 +31,12 @@ const exerciseSchema = new mongoose.Schema({
 
 const Exercise = mongoose.model('Exercise',exerciseSchema);
 
+setInterval(() => {
+  app.get('/awake', (req, res) => {
+    res.send("Awake");
+  });
+}, 25 * 60 * 1000);
+
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
