@@ -100,9 +100,9 @@ app.get('/api/users/:_id/logs', async (req,res) => {
 
     res.json({
       username: user.username,
-      count: log.length,
+      count: exercises.length,
       _id: req.params._id,
-      log: log
+      log: exercises
     });
   } catch (error) {
     res.send('error');
