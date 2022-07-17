@@ -90,7 +90,7 @@ app.get('/api/users/:_id/logs', async (req,res) => {
       if(req.query.to) search.date["$lt"] = new Date(req.query.to);
     }
 
-    let p = new Promise((resolve,reject) => {
+    let p = new Promise(async (resolve,reject) => {
       let exercises;
 
       if(req.query.limit){
