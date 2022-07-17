@@ -90,7 +90,7 @@ app.get('/api/users/:_id/logs', async (req,res) => {
       exercises = await Exercise.find(search);
     }
 
-    let log = exercises.map(exercise => {
+    let log = await exercises.map(exercise => {
       return {
         description: exercise.description,
         duration: exercise.duration,
@@ -98,17 +98,11 @@ app.get('/api/users/:_id/logs', async (req,res) => {
       };
     });
 
-    const testLog = [{
-      description: "test",
-      duration: 60,
-      date: new Date("1990-01-01").toDateString()
-    }]
-
     res.json({
       username: user.username,
-      count: 1,
+      count: log.length,
       _id: req.params._id,
-      log: testLog
+      log: log
     });
   } catch (error) {
     res.send('error');
