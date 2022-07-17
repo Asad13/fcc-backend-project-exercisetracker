@@ -114,9 +114,13 @@ app.get('/api/users/:_id/logs', async (req,res) => {
     p.then(log => {
       res.json({
         username: user.username,
-        count: log.length,
+        count: 1,
         _id: req.params._id,
-        log: log
+        log: [{
+          description: "test",
+          duration: 60,
+          date: "Mon Jan 01 1990"
+        }]
       });
     }).catch(error => {
       res.send('error');
