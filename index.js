@@ -84,28 +84,27 @@ app.get('/api/users/:_id/logs', async (req,res) => {
       if(req.query.to) search.date["$lt"] = new Date(req.query.to);
     }
     let exercises;
-    
+
     if(req.query.limit){
       exercises = await Exercise.find(search).limit(parseInt(req.query.limit));
     }else{
       exercises = await Exercise.find(search);
     }
     let log = [];
-    log = Promise.all(exercises.map(async exercise => {
+    log = await Promise.all(exercises.map(exercise => {
       return {
-        description: await exercise.description,
-        duration: await exercise.duration,
-        date: await exercise.date.toDateString()
+        description: exercise.description,
+        duration:exercise.duration,
+        date:exercise.date.toDateString()
       };
-    })).then(response => {
-      console.log(response);
-      res.json({
-        username: user.username,
-        count: log.length,
-        _id: req.params._id,
-        log: log
-      });
-    })
+    }))
+
+    res.json({
+      "username": user.username,
+      "count": log.length,
+      "_id": req.params._id,
+      "log": log
+    });
 
   } catch (error) {
     res.send('error');
