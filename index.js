@@ -89,8 +89,8 @@ app.get('/api/users/:_id/logs', async (req,res) => {
     }else{
       exercises = await Exercise.find(search);
     }
-
-    let log = await Promise.all(exercises.map(async exercise => {
+    let log = [];
+    log = await Promise.all(exercises.map(async exercise => {
       return {
         description: await exercise.description,
         duration: await exercise.duration,
