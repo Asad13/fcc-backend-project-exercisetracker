@@ -90,7 +90,7 @@ app.get('/api/users/:_id/logs', async (req,res) => {
       exercises = await Exercise.find(search);
     }
     let log = [];
-    log = await Promise.all(exercises.map(async exercise => {
+    log = Promise.all(exercises.map(async exercise => {
       return {
         description: await exercise.description,
         duration: await exercise.duration,
