@@ -114,7 +114,7 @@ app.get('/api/users/:_id/logs', async (req,res) => {
     p.then(log => {
       res.json({
         username: user.username,
-        count: parseInt(req.query.limit),
+        count: 1,
         _id: req.params._id,
         log: [{
           description: "test",
