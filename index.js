@@ -3,6 +3,7 @@ const app = express()
 const cors = require('cors')
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const { response } = require('express');
 require('dotenv').config()
 
 app.use(cors())
@@ -83,7 +84,7 @@ app.get('/api/users/:_id/logs', async (req,res) => {
       if(req.query.to) search.date["$lt"] = new Date(req.query.to);
     }
     let exercises;
-    console.log(search);
+    
     if(req.query.limit){
       exercises = await Exercise.find(search).limit(parseInt(req.query.limit));
     }else{
@@ -96,14 +97,16 @@ app.get('/api/users/:_id/logs', async (req,res) => {
         duration: await exercise.duration,
         date: await exercise.date.toDateString()
       };
-    }));
+    })).then(response => {
+      console.log(response);
+      res.json({
+        username: user.username,
+        count: log.length,
+        _id: req.params._id,
+        log: log
+      });
+    })
 
-    res.json({
-      username: user.username,
-      count: exercises.length,
-      _id: req.params._id,
-      log: exercises
-    });
   } catch (error) {
     res.send('error');
   }
