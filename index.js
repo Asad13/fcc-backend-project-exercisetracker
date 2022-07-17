@@ -98,11 +98,17 @@ app.get('/api/users/:_id/logs', async (req,res) => {
       };
     });
 
+    const testLog = [{
+      description: "test",
+      duration: 60,
+      date: new Date("1990-01-01").toDateString()
+    }]
+
     res.json({
       username: user.username,
       count: 1,
       _id: req.params._id,
-      log: log
+      log: testLog
     });
   } catch (error) {
     res.send('error');
